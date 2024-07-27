@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  db-cookunity:
+    image: postgres
+    container_name: db-cookunity
+    restart: always
+    environment:
+      POSTGRES_DB: cookdb
+      POSTGRES_USER: cook
+      POSTGRES_PASSWORD: cookpassword
+    ports:
+      - 5432:5432
