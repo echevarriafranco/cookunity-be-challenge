@@ -19,16 +19,16 @@ export class PokemonCardController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.pokemonCardService.findOne(+id);
+    return this.pokemonCardService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePokemonCardDto: UpdatePokemonCardDto) {
-    return this.pokemonCardService.update(+id, updatePokemonCardDto);
+    return this.pokemonCardService.update(id, updatePokemonCardDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.pokemonCardService.remove(+id);
+    return this.pokemonCardService.remove(id);
   }
 }

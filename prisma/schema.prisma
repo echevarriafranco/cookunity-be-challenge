@@ -18,5 +18,49 @@ model PokemonCard {
   name        String    @unique
   createdAt   DateTime  @default(now())
   health      Int
-  originalAttack Int
+  attack      Int
+  type        PokemonType
+  rarity      Rarity
+  expansion   Expansion
+  resistances         PokemonCard[] @relation("resistances")
+  resistancesRelation PokemonCard[] @relation("resistances")
+  weaknesses         PokemonCard[] @relation("weaknesses")
+  weaknessesRelation PokemonCard[] @relation("weaknesses")
+}
+
+enum PokemonType {
+    FIRE
+    WATER
+    ELECTRIC
+    GRASS
+    ICE
+    FIGHTING
+    POISON
+    GROUND
+    FLYING
+    PSYCHIC
+    BUG
+    ROCK
+    GHOST
+    DRAGON
+    DARK
+    STEEL
+    FAIRY  
+}
+
+enum Rarity {
+    COMMON
+    UNCOMMON
+    RARE
+    ULTRA_RARE
+    LEGENDARY
+}
+
+enum Expansion {
+    SWORD_AND_SHIELD
+    BRILLIANT_STARS
+    ASTRAL_RADIANCE
+    SILVER_TEMPEST
+    LOST_ORIGIN
+    POKEMON_GO 
 }

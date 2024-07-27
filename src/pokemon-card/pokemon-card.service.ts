@@ -8,22 +8,48 @@ export class PokemonCardService {
   constructor(private prisma: PrismaService) { }
 
   create(createPokemonCardDto: CreatePokemonCardDto) {
-    return 'This action adds a new pokemonCard';
+    return this.prisma.pokemonCard.create({
+      data: {
+        name: createPokemonCardDto.name,
+        health: createPokemonCardDto.health,
+        attack: createPokemonCardDto.attack,
+        type: createPokemonCardDto.type,
+        rarity: createPokemonCardDto.rarity,
+        expansion: createPokemonCardDto.expansion
+      },
+      include: {
+        resistances: true,
+        weaknesses: true,
+      }
+    });
   }
 
   async findAll() {
     return this.prisma.pokemonCard.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} pokemonCard`;
+  findOne(id: string) {
+    return this.prisma.pokemonCard.findUnique(
+      {
+        where: {
+          id: id
+        },
+        include: {
+          resistances: true,
+          weaknesses: true,
+        }
+      })
   }
 
-  update(id: number, updatePokemonCardDto: UpdatePokemonCardDto) {
+  update(id: string, updatePokemonCardDto: UpdatePokemonCardDto) {
     return `This action updates a #${id} pokemonCard`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} pokemonCard`;
+  remove(id: string) {
+    return this.prisma.pokemonCard.delete({
+      where: {
+        id: id
+      }
+    })
   }
 }
