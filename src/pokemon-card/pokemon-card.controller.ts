@@ -5,7 +5,7 @@ import { UpdatePokemonCardDto } from './dto/update-pokemon-card.dto';
 
 @Controller('pokemon-card')
 export class PokemonCardController {
-  constructor(private readonly pokemonCardService: PokemonCardService) {}
+  constructor(private readonly pokemonCardService: PokemonCardService) { }
 
   @Post()
   create(@Body() createPokemonCardDto: CreatePokemonCardDto) {
@@ -20,6 +20,11 @@ export class PokemonCardController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.pokemonCardService.findOne(id);
+  }
+
+  @Get(':id/against-cards')
+  findOneExtendedDetails(@Param('id') id: string) {
+    return this.pokemonCardService.getPokemonCardDetailsAgainstAnotherCards(id);
   }
 
   @Patch(':id')

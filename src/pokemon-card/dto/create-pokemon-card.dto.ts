@@ -1,4 +1,3 @@
-import { PokemonCard } from "@prisma/client";
 import { PokemonType, Rarity, Expansion } from '@prisma/client';
 
 
@@ -9,6 +8,6 @@ export class CreatePokemonCardDto {
     type: PokemonType;
     rarity: Rarity;
     expansion: Expansion;
-    resistances?: PokemonCard[];
-    weaknesses?: PokemonCard[];
+    resistances?: string[];
+    weaknesses?: string[];
 }

@@ -1,5 +1,4 @@
 import { PartialType } from "@nestjs/mapped-types";
-import { PokemonCard } from "@prisma/client";
 import { PokemonType, Rarity, Expansion } from '@prisma/client';
 import { CreatePokemonCardDto } from "./create-pokemon-card.dto";
 export class UpdatePokemonCardDto extends PartialType(CreatePokemonCardDto) {
@@ -9,6 +8,6 @@ export class UpdatePokemonCardDto extends PartialType(CreatePokemonCardDto) {
     type?: PokemonType;
     rarity?: Rarity;
     expansion?: Expansion;
-    resistances?: PokemonCard[];
-    weaknesses?: PokemonCard[];
+    resistances?: string[];
+    weaknesses?: string[];
 }

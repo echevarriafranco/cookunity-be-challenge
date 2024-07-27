@@ -8,14 +8,17 @@ export class PokemonCardService {
   constructor(private prisma: PrismaService) { }
 
   create(createPokemonCardDto: CreatePokemonCardDto) {
+    const { resistances, weaknesses, ...pokemonCardData } = createPokemonCardDto;
+
     return this.prisma.pokemonCard.create({
       data: {
-        name: createPokemonCardDto.name,
-        health: createPokemonCardDto.health,
-        attack: createPokemonCardDto.attack,
-        type: createPokemonCardDto.type,
-        rarity: createPokemonCardDto.rarity,
-        expansion: createPokemonCardDto.expansion
+        ...pokemonCardData,
+        resistances: {
+          connect: resistances?.map((id) => ({ id: id })),
+        },
+        weaknesses: {
+          connect: weaknesses?.map((id) => ({ id: id })),
+        },
       },
       include: {
         resistances: true,
@@ -33,16 +36,41 @@ export class PokemonCardService {
       {
         where: {
           id: id
-        },
-        include: {
-          resistances: true,
-          weaknesses: true,
         }
       })
   }
 
-  update(id: string, updatePokemonCardDto: UpdatePokemonCardDto) {
-    return `This action updates a #${id} pokemonCard`;
+  async getPokemonCardDetailsAgainstAnotherCards(id: string) {
+    return this.prisma.pokemonCard.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        resistances: true,
+        weaknesses: true,
+      },
+    });
+  }
+
+  async update(id: string, updatePokemonCardDto: UpdatePokemonCardDto) {
+    const { resistances, weaknesses, ...pokemonCardData } = updatePokemonCardDto;
+
+    return this.prisma.pokemonCard.update({
+      where: { id },
+      data: {
+        ...pokemonCardData,
+        resistances: {
+          set: resistances?.map((id) => ({ id })),
+        },
+        weaknesses: {
+          set: weaknesses?.map((id) => ({ id })),
+        },
+      },
+      include: {
+        resistances: true,
+        weaknesses: true,
+      },
+    });
   }
 
   remove(id: string) {
