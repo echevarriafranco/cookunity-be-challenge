@@ -2,8 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PokemonCardService } from './pokemon-card.service';
 import { CreatePokemonCardDto } from './dto/create-pokemon-card.dto';
 import { UpdatePokemonCardDto } from './dto/update-pokemon-card.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('pokemon-card')
+@ApiTags('Pokemon Card')
 export class PokemonCardController {
   constructor(private readonly pokemonCardService: PokemonCardService) { }
 
