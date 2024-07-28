@@ -13,19 +13,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Battle {
+  id        String        @id @default(uuid())
+  createdAt DateTime      @default(now())
+  result    BattleResult
+  attacker  PokemonCard   @relation("attackerBattle", fields: [attackerId], references: [id])
+  attackerId String
+  defender  PokemonCard   @relation("defenderBattle", fields: [defenderId], references: [id])
+  defenderId String
+}
+
+enum BattleResult {
+  ATTACKER_VICTORY
+  DEFENDER_VICTORY
+}
+
 model PokemonCard {
   id          String    @id @default(cuid())
   name        String    @unique
+  img         String
   createdAt   DateTime  @default(now())
   health      Int
   attack      Int
   type        PokemonType
   rarity      Rarity
   expansion   Expansion
-  resistances         PokemonCard[] @relation("resistances")
-  resistancesRelation PokemonCard[] @relation("resistances")
-  weaknesses         PokemonCard[] @relation("weaknesses")
-  weaknessesRelation PokemonCard[] @relation("weaknesses")
+  resistances        PokemonType[]
+  weaknesses         PokemonType[]
+  battlesAsAttacker  Battle[] @relation("attackerBattle")
+  battlesAsDefender  Battle[] @relation("defenderBattle")
 }
 
 enum PokemonType {

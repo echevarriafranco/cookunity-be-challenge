@@ -7,4 +7,4 @@ import { PrismaService } from 'src/prisma.service';
   controllers: [PokemonCardController],
   providers: [PokemonCardService, PrismaService],
 })
-export class PokemonCardModule {}
+export class PokemonCardModule { }
