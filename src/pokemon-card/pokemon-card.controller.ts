@@ -24,7 +24,7 @@ export class PokemonCardController {
     return this.pokemonCardService.findOne(id);
   }
 
-  @Get(':id/against-cards')
+  @Get(':id/include-details')
   findOneExtendedDetails(@Param('id') id: string) {
     return this.pokemonCardService.getPokemonCardDetailsAgainstAnotherCards(id);
   }
