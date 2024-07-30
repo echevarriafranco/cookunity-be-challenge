@@ -3,16 +3,106 @@ import { PrismaClient, PokemonType, Rarity, Expansion } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
+
+    const TypeRelations = {
+        FIRE: {
+            resistances: [PokemonType.FIRE, PokemonType.GRASS, PokemonType.ICE, PokemonType.BUG, PokemonType.STEEL, PokemonType.FAIRY],
+            weaknesses: [PokemonType.WATER, PokemonType.ROCK, PokemonType.GROUND]
+        },
+        WATER: {
+            resistances: [PokemonType.WATER, PokemonType.FIRE, PokemonType.ICE, PokemonType.STEEL],
+            weaknesses: [PokemonType.ELECTRIC, PokemonType.GRASS]
+        },
+        ELECTRIC: {
+            resistances: [PokemonType.ELECTRIC, PokemonType.FLYING, PokemonType.STEEL],
+            weaknesses: [PokemonType.GROUND]
+        },
+        GRASS: {
+            resistances: [PokemonType.WATER, PokemonType.ELECTRIC, PokemonType.GRASS, PokemonType.GROUND],
+            weaknesses: [PokemonType.FIRE, PokemonType.ICE, PokemonType.POISON, PokemonType.FLYING, PokemonType.BUG]
+        },
+        ICE: {
+            resistances: [PokemonType.ICE],
+            weaknesses: [PokemonType.FIRE, PokemonType.FIGHTING, PokemonType.ROCK, PokemonType.STEEL]
+        },
+        FIGHTING: {
+            resistances: [PokemonType.BUG, PokemonType.ROCK, PokemonType.DARK],
+            weaknesses: [PokemonType.FLYING, PokemonType.PSYCHIC, PokemonType.FAIRY]
+        },
+        POISON: {
+            resistances: [PokemonType.GRASS, PokemonType.FIGHTING, PokemonType.POISON, PokemonType.BUG, PokemonType.FAIRY],
+            weaknesses: [PokemonType.GROUND, PokemonType.PSYCHIC]
+        },
+        GROUND: {
+            resistances: [PokemonType.POISON, PokemonType.ROCK],
+            weaknesses: [PokemonType.WATER, PokemonType.GRASS, PokemonType.ICE]
+        },
+        FLYING: {
+            resistances: [PokemonType.GRASS, PokemonType.FIGHTING, PokemonType.BUG],
+            weaknesses: [PokemonType.ELECTRIC, PokemonType.ICE, PokemonType.ROCK]
+        },
+        PSYCHIC: {
+            resistances: [PokemonType.FIGHTING, PokemonType.PSYCHIC],
+            weaknesses: [PokemonType.BUG, PokemonType.GHOST, PokemonType.DARK]
+        },
+        BUG: {
+            resistances: [PokemonType.GRASS, PokemonType.FIGHTING, PokemonType.GROUND],
+            weaknesses: [PokemonType.FIRE, PokemonType.FLYING, PokemonType.ROCK]
+        },
+        ROCK: {
+            resistances: [PokemonType.FIRE, PokemonType.POISON, PokemonType.FLYING],
+            weaknesses: [PokemonType.WATER, PokemonType.GRASS, PokemonType.FIGHTING, PokemonType.GROUND, PokemonType.STEEL]
+        },
+        GHOST: {
+            resistances: [PokemonType.POISON, PokemonType.BUG],
+            weaknesses: [PokemonType.GHOST, PokemonType.DARK]
+        },
+        DRAGON: {
+            resistances: [PokemonType.FIRE, PokemonType.WATER, PokemonType.ELECTRIC, PokemonType.GRASS],
+            weaknesses: [PokemonType.ICE, PokemonType.DRAGON, PokemonType.FAIRY]
+        },
+        DARK: {
+            resistances: [PokemonType.GHOST, PokemonType.DARK],
+            weaknesses: [PokemonType.FIGHTING, PokemonType.BUG, PokemonType.FAIRY]
+        },
+        STEEL: {
+            resistances: [PokemonType.GRASS, PokemonType.ICE, PokemonType.FLYING, PokemonType.PSYCHIC, PokemonType.BUG, PokemonType.ROCK, PokemonType.DRAGON, PokemonType.STEEL, PokemonType.FAIRY],
+            weaknesses: [PokemonType.FIRE, PokemonType.FIGHTING, PokemonType.GROUND]
+        },
+        FAIRY: {
+            resistances: [PokemonType.FIGHTING, PokemonType.BUG, PokemonType.DARK],
+            weaknesses: [PokemonType.POISON, PokemonType.STEEL]
+        }
+    };
+    const typeEntries = Object.values(PokemonType);
+
+    for (const typeName of typeEntries) {
+        await prisma.type.create({
+            data: {
+                name: typeName,
+                resistances: TypeRelations[typeName].resistances,
+                weaknesses: TypeRelations[typeName].weaknesses
+            },
+        });
+    }
+
+
     const pokemon1 = await prisma.pokemonCard.create({
         data: {
             name: 'Pikachu',
             health: 60,
             attack: 50,
-            type: PokemonType.ELECTRIC,
+            type: {
+                connect: {
+                    id: (await prisma.type.findFirst({
+                        where: {
+                            name: PokemonType.ELECTRIC
+                        }
+                    })).id
+                }
+            },
             rarity: Rarity.COMMON,
             expansion: Expansion.POKEMON_GO,
-            resistances: [PokemonType.ELECTRIC],
-            weaknesses: [PokemonType.GROUND],
             img: 'https://img.pokemondb.net/sprites/home/shiny/pikachu.png'
         },
     });
@@ -22,11 +112,17 @@ async function main() {
             name: 'Charizard',
             health: 90,
             attack: 40,
-            type: PokemonType.FIRE,
+            type: {
+                connect: {
+                    id: (await prisma.type.findFirst({
+                        where: {
+                            name: PokemonType.FIRE
+                        }
+                    })).id
+                }
+            },
             rarity: Rarity.RARE,
             expansion: Expansion.POKEMON_GO,
-            resistances: [PokemonType.FIRE, PokemonType.GRASS, PokemonType.BUG],
-            weaknesses: [PokemonType.WATER, PokemonType.ROCK, PokemonType.ELECTRIC],
             img: 'https://img.pokemondb.net/sprites/home/shiny/charizard.png'
         },
     });
@@ -37,11 +133,17 @@ async function main() {
             img: 'https://img.pokemondb.net/sprites/home/shiny/onix.png',
             health: 160,
             attack: 30,
-            type: PokemonType.ROCK,
+            type: {
+                connect: {
+                    id: (await prisma.type.findFirst({
+                        where: {
+                            name: PokemonType.ROCK
+                        }
+                    })).id
+                }
+            },
             rarity: Rarity.COMMON,
-            expansion: Expansion.POKEMON_GO,
-            resistances: [PokemonType.POISON, PokemonType.FLYING],
-            weaknesses: [PokemonType.WATER, PokemonType.GRASS, PokemonType.FIGHTING, PokemonType.GROUND, PokemonType.STEEL]
+            expansion: Expansion.POKEMON_GO
         },
     });
 
@@ -51,11 +153,17 @@ async function main() {
             img: 'https://img.pokemondb.net/sprites/home/shiny/feraligatr.png',
             health: 120,
             attack: 70,
-            type: PokemonType.WATER,
+            type: {
+                connect: {
+                    id: (await prisma.type.findFirst({
+                        where: {
+                            name: PokemonType.WATER
+                        }
+                    })).id
+                }
+            },
             rarity: Rarity.RARE,
-            expansion: Expansion.POKEMON_GO,
-            resistances: [PokemonType.FIRE, PokemonType.WATER, PokemonType.ICE],
-            weaknesses: [PokemonType.ELECTRIC, PokemonType.GRASS]
+            expansion: Expansion.POKEMON_GO
         },
     });
 
@@ -65,11 +173,17 @@ async function main() {
             img: 'https://img.pokemondb.net/sprites/home/shiny/sneasel.png',
             health: 80,
             attack: 60,
-            type: PokemonType.DARK,
+            type: {
+                connect: {
+                    id: (await prisma.type.findFirst({
+                        where: {
+                            name: PokemonType.DARK
+                        }
+                    })).id
+                }
+            },
             rarity: Rarity.UNCOMMON,
-            expansion: Expansion.POKEMON_GO,
-            resistances: [PokemonType.DARK],
-            weaknesses: [PokemonType.FIGHTING, PokemonType.BUG, PokemonType.FAIRY]
+            expansion: Expansion.POKEMON_GO
         },
     });
 
@@ -79,11 +193,17 @@ async function main() {
             img: 'https://img.pokemondb.net/sprites/home/shiny/scizor.png',
             health: 100,
             attack: 80,
-            type: PokemonType.BUG,
+            type: {
+                connect: {
+                    id: (await prisma.type.findFirst({
+                        where: {
+                            name: PokemonType.BUG
+                        }
+                    })).id
+                }
+            },
             rarity: Rarity.RARE,
-            expansion: Expansion.POKEMON_GO,
-            resistances: [PokemonType.GRASS, PokemonType.FIGHTING, PokemonType.GROUND],
-            weaknesses: [PokemonType.FIRE, PokemonType.FLYING, PokemonType.ROCK]
+            expansion: Expansion.SWORD_AND_SHIELD
         },
     });
 
@@ -93,11 +213,17 @@ async function main() {
             img: 'https://img.pokemondb.net/sprites/home/shiny/treecko.png',
             health: 50,
             attack: 40,
-            type: PokemonType.GRASS,
+            type: {
+                connect: {
+                    id: (await prisma.type.findFirst({
+                        where: {
+                            name: PokemonType.GRASS
+                        }
+                    })).id
+                }
+            },
             rarity: Rarity.COMMON,
-            expansion: Expansion.POKEMON_GO,
-            resistances: [PokemonType.WATER, PokemonType.ELECTRIC, PokemonType.GRASS],
-            weaknesses: [PokemonType.FIRE, PokemonType.ICE, PokemonType.POISON, PokemonType.FLYING, PokemonType.BUG]
+            expansion: Expansion.LOST_ORIGIN
         },
     });
 
@@ -107,11 +233,17 @@ async function main() {
             img: 'https://img.pokemondb.net/sprites/home/shiny/charmander.png',
             health: 60,
             attack: 50,
-            type: PokemonType.FIRE,
+            type: {
+                connect: {
+                    id: (await prisma.type.findFirst({
+                        where: {
+                            name: PokemonType.FIRE
+                        }
+                    })).id
+                }
+            },
             rarity: Rarity.COMMON,
-            expansion: Expansion.POKEMON_GO,
-            resistances: [PokemonType.FIRE, PokemonType.GRASS, PokemonType.BUG],
-            weaknesses: [PokemonType.WATER, PokemonType.GROUND, PokemonType.ROCK]
+            expansion: Expansion.SILVER_TEMPEST
         },
     });
 
@@ -121,11 +253,17 @@ async function main() {
             img: 'https://img.pokemondb.net/sprites/home/shiny/charmeleon.png',
             health: 80,
             attack: 70,
-            type: PokemonType.FIRE,
+            type: {
+                connect: {
+                    id: (await prisma.type.findFirst({
+                        where: {
+                            name: PokemonType.FIRE
+                        }
+                    })).id
+                }
+            },
             rarity: Rarity.UNCOMMON,
-            expansion: Expansion.POKEMON_GO,
-            resistances: [PokemonType.FIRE, PokemonType.GRASS, PokemonType.BUG],
-            weaknesses: [PokemonType.WATER, PokemonType.GROUND, PokemonType.ROCK]
+            expansion: Expansion.BRILLIANT_STARS
         },
     });
 
@@ -139,3 +277,7 @@ main()
     .finally(async () => {
         await prisma.$disconnect();
     });
+
+
+
+

@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { PokemonCardService } from './pokemon-card.service';
 import { CreatePokemonCardDto } from './dto/create-pokemon-card.dto';
 import { UpdatePokemonCardDto } from './dto/update-pokemon-card.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { CardsSearchParams } from 'src/types/commons';
 
 @Controller('pokemon-card')
 @ApiTags('Pokemon Card')
@@ -15,8 +16,8 @@ export class PokemonCardController {
   }
 
   @Get()
-  findAll() {
-    return this.pokemonCardService.findAll();
+  findAll(@Query() query: CardsSearchParams) {
+    return this.pokemonCardService.findAll(query);
   }
 
   @Get(':id')

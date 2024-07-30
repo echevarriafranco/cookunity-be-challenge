@@ -9,6 +9,4 @@ export class UpdatePokemonCardDto extends PartialType(CreatePokemonCardDto) {
     type?: PokemonType;
     rarity?: Rarity;
     expansion?: Expansion;
-    resistances?: PokemonType[];
-    weaknesses?: PokemonType[];
 }

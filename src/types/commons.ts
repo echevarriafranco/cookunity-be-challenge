@@ -1,0 +1,1 @@
+export interface CardsSearchParams { queryByName: string, queryByExpansion: string, type: string }

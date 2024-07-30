@@ -14,12 +14,12 @@ datasource db {
 }
 
 model Battle {
-  id        String        @id @default(uuid())
-  createdAt DateTime      @default(now())
-  result    BattleResult
-  attacker  PokemonCard   @relation("attackerBattle", fields: [attackerId], references: [id])
+  id         String       @id @default(uuid())
+  createdAt  DateTime     @default(now())
+  result     BattleResult
+  attacker   PokemonCard  @relation("attackerBattle", fields: [attackerId], references: [id])
   attackerId String
-  defender  PokemonCard   @relation("defenderBattle", fields: [defenderId], references: [id])
+  defender   PokemonCard  @relation("defenderBattle", fields: [defenderId], references: [id])
   defenderId String
 }
 
@@ -28,55 +28,62 @@ enum BattleResult {
   DEFENDER_VICTORY
 }
 
+model Type {
+  id          Int           @id @default(autoincrement())
+  name        PokemonType
+  resistances PokemonType[]
+  weaknesses  PokemonType[]
+  PokemonCard PokemonCard[]
+}
+
 model PokemonCard {
-  id          String    @id @default(cuid())
-  name        String    @unique
-  img         String
-  createdAt   DateTime  @default(now())
-  health      Int
-  attack      Int
-  type        PokemonType
-  rarity      Rarity
-  expansion   Expansion
-  resistances        PokemonType[]
-  weaknesses         PokemonType[]
-  battlesAsAttacker  Battle[] @relation("attackerBattle")
-  battlesAsDefender  Battle[] @relation("defenderBattle")
+  id                String        @id @default(cuid())
+  name              String        @unique
+  img               String
+  createdAt         DateTime      @default(now())
+  health            Int
+  attack            Int
+  type              Type          @relation(fields: [typeId], references: [id])
+  typeId            Int
+  rarity            Rarity
+  expansion         Expansion
+  battlesAsAttacker Battle[]      @relation("attackerBattle")
+  battlesAsDefender Battle[]      @relation("defenderBattle")
 }
 
 enum PokemonType {
-    FIRE
-    WATER
-    ELECTRIC
-    GRASS
-    ICE
-    FIGHTING
-    POISON
-    GROUND
-    FLYING
-    PSYCHIC
-    BUG
-    ROCK
-    GHOST
-    DRAGON
-    DARK
-    STEEL
-    FAIRY  
+  FIRE
+  WATER
+  ELECTRIC
+  GRASS
+  ICE
+  FIGHTING
+  POISON
+  GROUND
+  FLYING
+  PSYCHIC
+  BUG
+  ROCK
+  GHOST
+  DRAGON
+  DARK
+  STEEL
+  FAIRY
 }
 
 enum Rarity {
-    COMMON
-    UNCOMMON
-    RARE
-    ULTRA_RARE
-    LEGENDARY
+  COMMON
+  UNCOMMON
+  RARE
+  ULTRA_RARE
+  LEGENDARY
 }
 
 enum Expansion {
-    SWORD_AND_SHIELD
-    BRILLIANT_STARS
-    ASTRAL_RADIANCE
-    SILVER_TEMPEST
-    LOST_ORIGIN
-    POKEMON_GO 
+  SWORD_AND_SHIELD
+  BRILLIANT_STARS
+  ASTRAL_RADIANCE
+  SILVER_TEMPEST
+  LOST_ORIGIN
+  POKEMON_GO
 }
