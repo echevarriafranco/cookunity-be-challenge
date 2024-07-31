@@ -1,14 +1,15 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { BattleService } from './battle.service';
 import { SimulateBattleDto } from './dto/create-battle.dto';
 import { BattleResultDto } from './dto/get-battle.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('battle')
 @ApiTags('Battle')
+@UseGuards(AuthGuard)
 export class BattleController {
   constructor(private readonly battleService: BattleService) { }
-
 
   @Post('simulate')
   @ApiOperation({

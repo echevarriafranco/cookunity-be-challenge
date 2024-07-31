@@ -12,7 +12,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     const message = exception instanceof HttpException
       ? exception.getResponse()
-      : 'Custom Internal server error Message';
+      : 'Internal server error';
 
     response.status(status).json({
       error: {

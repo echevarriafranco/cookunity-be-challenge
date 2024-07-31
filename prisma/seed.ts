@@ -1,4 +1,5 @@
 import { PrismaClient, PokemonType, Rarity, Expansion } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -267,6 +268,16 @@ async function main() {
         },
     });
 
+    const hashedPassword = await bcrypt.hash('adminPassword', 10);
+
+    await prisma.user.create({
+        data: {
+            email: 'admin@example.com',
+            password: hashedPassword,
+        },
+    });
+
+    console.log('Admin user created');
 }
 
 main()

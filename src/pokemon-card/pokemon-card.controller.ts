@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, Body, Query, Param } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Query, Param, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiQuery, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { CreatePokemonCardDto } from './dto/create-pokemon-card.dto';
 import { UpdatePokemonCardDto } from './dto/update-pokemon-card.dto';
@@ -7,9 +7,11 @@ import { CardsSearchParams } from 'src/types/commons';
 import { GetPokemonCardDto } from './dto/get-pokemon-card.dto';
 import { Expansion, PokemonType } from '@prisma/client';
 import { GetPokemonCardExtendedDto } from './dto/get-pokemon-card-extended.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @ApiTags('pokemon-card')
 @Controller('pokemon-card')
+@UseGuards(AuthGuard)
 export class PokemonCardController {
   constructor(private readonly pokemonCardService: PokemonCardService) { }
 
