@@ -1,18 +1,32 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { BattleService } from './battle.service';
-import { ApiTags } from '@nestjs/swagger';
+import { SimulateBattleDto } from './dto/create-battle.dto';
+import { BattleResultDto } from './dto/get-battle.dto';
+
 @Controller('battle')
 @ApiTags('Battle')
 export class BattleController {
   constructor(private readonly battleService: BattleService) { }
 
+
   @Post('simulate')
-  async simulateBattle(@Body() body: { attackerId: string; defenderId: string }) {
-    const { attackerId, defenderId } = body;
-
-
+  @ApiOperation({
+    summary: 'Simulate a Pokémon battle',
+    description: 'Simulates a Pokémon battle between the attacker and defender provided in the request body, and returns the result of the battle.'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The result of the simulated Pokémon battle',
+    type: BattleResultDto
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid input data'
+  })
+  async simulateBattle(@Body() createBattleDto: SimulateBattleDto) {
     const { isAttackerVictorious, damageToDefender, battle } =
-      await this.battleService.simulateBattle(attackerId, defenderId);
+      await this.battleService.simulateBattle(createBattleDto.attackerId, createBattleDto.defenderId);
 
     return {
       isAttackerVictorious,
@@ -26,7 +40,22 @@ export class BattleController {
       },
     };
   }
+
+
   @Get()
+  @ApiOperation({
+    summary: 'Get all battles',
+    description: 'Retrieves a list of all battles.'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of all battles',
+    type: [BattleResultDto]
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No battles found'
+  })
   findAll() {
     return this.battleService.findAll();
   }

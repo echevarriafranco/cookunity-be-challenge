@@ -3,7 +3,6 @@ import { PrismaService } from 'src/prisma.service';
 import { BattleResult, PokemonCard } from '@prisma/client';
 import { PokemonCardService } from 'src/pokemon-card/pokemon-card.service';
 import { PokemonWeaknessesAndResistances } from 'src/types/WeaknessesAndResistances';
-import { GetPokemonCardDto } from 'src/pokemon-card/dto/get-pokemon-card.dto';
 
 @Injectable()
 export class BattleService {
@@ -14,8 +13,8 @@ export class BattleService {
 
   async simulateBattle(attackerId: string, defenderId: string) {
     // get defender and attacker details
-    const attacker: GetPokemonCardDto = await this.pokemonCardService.findOne(attackerId)
-    const defender: PokemonWeaknessesAndResistances = await this.pokemonCardService.getPokemonCardDetailsAgainstAnotherCards(defenderId)
+    const attacker = await this.pokemonCardService.findOne(attackerId) as PokemonCard
+    const defender = await this.pokemonCardService.getPokemonCardDetailsAgainstAnotherCards(defenderId) as PokemonWeaknessesAndResistances
 
     const damageToDefender = this.calculateDamage(
       attacker,
@@ -53,7 +52,7 @@ export class BattleService {
    * @returns 
    */
   private calculateDamage(
-    attacker: GetPokemonCardDto,
+    attacker: PokemonCard,
     defenderResistances: PokemonCard[],
     defenderWeaknesses: PokemonCard[]
   ): number {
