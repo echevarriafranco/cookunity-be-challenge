@@ -14,8 +14,5 @@ export class SearchPokemonsCardDto {
     type?: PokemonType;
 
     @IsOptional()
-    @IsEnum(Expansion, {
-        message: 'Invalid expansion. Allowed values are: ' + Object.values(Expansion).join(', '),
-    })
     queryByExpansion?: Expansion;
 }

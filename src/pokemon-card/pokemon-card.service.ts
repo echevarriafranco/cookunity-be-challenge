@@ -3,7 +3,7 @@ import { CreatePokemonCardDto } from './dto/create-pokemon-card.dto';
 import { UpdatePokemonCardDto } from './dto/update-pokemon-card.dto';
 import { PrismaService } from 'src/prisma.service';
 import { PokemonWeaknessesAndResistances } from 'src/types/WeaknessesAndResistances';
-import { PokemonCard } from '@prisma/client';
+import { Expansion, PokemonCard } from '@prisma/client';
 import { CardsSearchParams, ServiceResponse } from 'src/types/commons';
 import { PokemonCardExtended } from 'src/types/PokemonCardExtended';
 
@@ -53,8 +53,13 @@ export class PokemonCardService {
     }
 
     if (query.queryByExpansion) {
+      const upperCaseExpansion = query.queryByExpansion.toUpperCase();
+
+      if (!Object.values(Expansion).includes(upperCaseExpansion as Expansion)) {
+        return []
+      }
       filters.expansion = {
-        equals: query.queryByExpansion,
+        equals: upperCaseExpansion,
       };
     }
     const myObject = {
