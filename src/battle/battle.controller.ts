@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { BattleService } from './battle.service';
 import { SimulateBattleDto } from './dto/create-battle.dto';
 import { BattleResultDto } from './dto/get-battle.dto';
@@ -8,6 +8,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 @Controller('battle')
 @ApiTags('Battle')
 @UseGuards(AuthGuard)
+@ApiBearerAuth('token')
 export class BattleController {
   constructor(private readonly battleService: BattleService) { }
 
@@ -17,13 +18,9 @@ export class BattleController {
     description: 'Simulates a Pokémon battle between the attacker and defender provided in the request body, and returns the result of the battle.'
   })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'The result of the simulated Pokémon battle',
     type: BattleResultDto
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid input data'
   })
   async simulateBattle(@Body() createBattleDto: SimulateBattleDto) {
     const { isAttackerVictorious, damageToDefender, battle } =

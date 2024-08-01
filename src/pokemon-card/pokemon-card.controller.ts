@@ -1,17 +1,19 @@
-import { Controller, Get, Post, Patch, Delete, Body, Query, Param, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiQuery, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { Controller, Get, Post, Patch, Delete, Body, Query, Param, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiQuery, ApiParam, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { CreatePokemonCardDto } from './dto/create-pokemon-card.dto';
 import { UpdatePokemonCardDto } from './dto/update-pokemon-card.dto';
 import { PokemonCardService } from './pokemon-card.service';
-import { CardsSearchParams } from 'src/types/commons';
 import { GetPokemonCardDto } from './dto/get-pokemon-card.dto';
 import { Expansion, PokemonType } from '@prisma/client';
 import { GetPokemonCardExtendedDto } from './dto/get-pokemon-card-extended.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
-
+import { SearchPokemonsCardDto } from './dto/search-pokemon-card.dto';
+import { UpperCasePipe } from 'src/pipes/uppercase-transformer.pipe';
+ 
 @ApiTags('pokemon-card')
 @Controller('pokemon-card')
 @UseGuards(AuthGuard)
+@ApiBearerAuth('token')
 export class PokemonCardController {
   constructor(private readonly pokemonCardService: PokemonCardService) { }
 
@@ -65,7 +67,8 @@ export class PokemonCardController {
     status: 400,
     description: 'Invalid query parameters'
   })
-  findAll(@Query() query: CardsSearchParams) {
+  @UsePipes(new UpperCasePipe())
+  findAll(@Query() query: SearchPokemonsCardDto) {
     return this.pokemonCardService.findAll(query);
   }
 

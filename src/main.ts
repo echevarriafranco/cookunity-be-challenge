@@ -10,6 +10,14 @@ async function bootstrap() {
     .setTitle('Pokemons Battle')
     .setDescription('The Pokemons Battle API description')
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      'token', 
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
