@@ -64,6 +64,7 @@ export class PokemonCardService {
     }
     const myObject = {
       where: filters,
+      include: { type: true }
     };
     return this.prisma.pokemonCard.findMany(myObject);
   }
