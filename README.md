@@ -21,10 +21,16 @@
 </p>
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+ 
+## Local Environment Setup
+ 
+- Install Dependencies:
+- Run npm install.
+- Install Node.js: Ensure Node.js version 20.x is installed.
+- Install Docker: Required to run the backend services locally.
+- Command: docker compose up.
+- Database Migrations: Run migrations using: npx prisma migrate dev --name init.
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## Installation
 
@@ -37,37 +43,16 @@ $ npm install
 ```bash
 # development
 $ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
-
-## Test
+## Environment
+- You can point the Nest app to a local database on docker or to a remote hosted database.
+- This is used to connect or run prisma migrations.
+- Just change the DATABASE_URL variable in the .env file
 
 ```bash
-# unit tests
-$ npm run test
+# local
+$ DATABASE_URL="postgresql://cook:cookpassword@localhost:5432/cookdb?schema=public"
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+# remote
+$ DATABASE_URL="postgresql://postgres:TwDFGapSTgFtBdsKFKCeczSQWPkYdPAR@viaduct.proxy.rlwy.net:21960/railway"
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).

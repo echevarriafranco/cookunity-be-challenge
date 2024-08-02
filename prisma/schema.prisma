@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,15 +11,10 @@ model Battle {
   id         String       @id @default(uuid())
   createdAt  DateTime     @default(now())
   result     BattleResult
-  attacker   PokemonCard  @relation("attackerBattle", fields: [attackerId], references: [id])
   attackerId String
-  defender   PokemonCard  @relation("defenderBattle", fields: [defenderId], references: [id])
   defenderId String
-}
-
-enum BattleResult {
-  ATTACKER_VICTORY
-  DEFENDER_VICTORY
+  attacker   PokemonCard  @relation("attackerBattle", fields: [attackerId], references: [id])
+  defender   PokemonCard  @relation("defenderBattle", fields: [defenderId], references: [id])
 }
 
 model Type {
@@ -37,18 +26,30 @@ model Type {
 }
 
 model PokemonCard {
-  id                String        @id @default(cuid())
-  name              String        @unique
+  id                String    @id @default(cuid())
+  name              String    @unique
   img               String
-  createdAt         DateTime      @default(now())
+  createdAt         DateTime  @default(now())
   health            Int
   attack            Int
-  type              Type          @relation(fields: [typeId], references: [id])
   typeId            Int
   rarity            Rarity
   expansion         Expansion
-  battlesAsAttacker Battle[]      @relation("attackerBattle")
-  battlesAsDefender Battle[]      @relation("defenderBattle")
+  battlesAsAttacker Battle[]  @relation("attackerBattle")
+  battlesAsDefender Battle[]  @relation("defenderBattle")
+  type              Type      @relation(fields: [typeId], references: [id])
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+enum BattleResult {
+  ATTACKER_VICTORY
+  DEFENDER_VICTORY
 }
 
 enum PokemonType {
@@ -86,11 +87,4 @@ enum Expansion {
   SILVER_TEMPEST
   LOST_ORIGIN
   POKEMON_GO
-}
-
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
 }
